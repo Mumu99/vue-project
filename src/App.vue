@@ -18,8 +18,8 @@ export default {
   },
   // 页面加载完成之后的回调
   mounted () {
-    this.$store.dispatch('getBaseCategoryList')
-    console.log(this.$store)
+    // this.$store.dispatch('getBaseCategoryList')
+    // console.log(this.$store)
   }
 }
 </script>

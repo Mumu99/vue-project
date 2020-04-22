@@ -10,7 +10,8 @@ const state = {
 const mutations = {
   // 直接修改三级分类的信息数据
   RECEIVE_BASE_CATEGORY_LIST(state, baseCategoryList) {
-    state.baseCategoryList = baseCategoryList
+    // 因为页面显示的数据行超出,所以就剪切两个
+    state.baseCategoryList = baseCategoryList.splice(0, baseCategoryList.length - 2)
   }
 }
 
