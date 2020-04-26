@@ -1,10 +1,14 @@
 // 包含多个间接修改状态数据的方法的对象
 import {
-  reqBaseCategoryList
+  reqBaseCategoryList,
+  reqBanners,
+  reqFloors
 } from '@/api'
 
 const state = {
   baseCategoryList: [], // 三级分类的信息数据的数组
+  banners: [], // 大轮播图的数据
+  floors: [] // 楼层的数据
 }
 
 const mutations = {
@@ -12,6 +16,14 @@ const mutations = {
   RECEIVE_BASE_CATEGORY_LIST(state, baseCategoryList) {
     // 因为页面显示的数据行超出,所以就剪切两个
     state.baseCategoryList = baseCategoryList.splice(0, baseCategoryList.length - 2)
+  },
+  // 直接修改大轮播图的数据
+  RECEIVE_BANNERS(state, banners) {
+    state.banners = banners
+  },
+  // 直接修改楼层的数据
+  RECEIVE_FLOORS(state, floors) {
+    state.floors = floors
   }
 }
 
@@ -30,6 +42,32 @@ const actions = {
       // 提交对应的mutations, 并修改状态数据
       commit('RECEIVE_BASE_CATEGORY_LIST', data)
     }
+  },
+  // 发送请求获取banners和floors的数据
+  async getBanners({
+    commit
+  }) {
+    const result = await reqBanners()
+    const {
+      code,
+      data
+    } = result
+    if (code === 200) {
+      commit('RECEIVE_BANNERS', data)
+    }
+  },
+  async getFloors({
+    commit
+  }) {
+    const result = await reqFloors()
+    const {
+      code,
+      data
+    } = result
+    if (code === 200) {
+      commit('RECEIVE_FLOORS', data)
+    }
+
   }
 }
 

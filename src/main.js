@@ -1,13 +1,17 @@
 // 引入Vue
 import Vue from 'vue'
+// 引入swiper/style
+import 'swiper/css/swiper.css'
 // 引入App
 import App from './App.vue'
 // 引入路由
 import router from './router'
-
 // 引入vuex中的store
 import store from './store'
-
+// 引入mock
+import './mock/mockServer'
+// 引入Carousel轮播图组件
+import Carousel from './components/Carousel'
 // 商品分类导航
 import TypeNav from './components/TypeNav'
 // 列表
@@ -31,6 +35,7 @@ Vue.component('Rank', Rank)
 Vue.component('Like', Like)
 Vue.component('Floor', Floor)
 Vue.component('Brand', Brand)
+Vue.component('Carousel', Carousel)
 // 设置浏览器的控制台中是否显示默认提示信息
 Vue.config.productionTip = false
 // 创建Vue实例

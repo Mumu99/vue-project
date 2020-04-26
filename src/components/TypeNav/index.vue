@@ -2,7 +2,59 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <h2 class="all">全部商品分类</h2>
+      <div @mouseenter="isShowHomeFirst=true" @mouseleave="HideList">
+        <h2 class="all">全部商品分类</h2>
+        <div class="sort" @mouseleave="currentIndex=-2" v-show="isShowHomeFirst" @click="toSearch">
+          <div class="all-sort-list2">
+            <div
+              class="item bo"
+              v-for="(c1,index) in baseCategoryList"
+              :key="c1.categoryId"
+              :class="{item_on:currentIndex===index}"
+              @mouseenter="showSubCategorys(index)"
+            >
+              <h3>
+                <a
+                  href="javascript:;"
+                  :data-CategoryName="c1.categoryName"
+                  :data-Category1Id="c1.categoryId"
+                >{{c1.categoryName}}</a>
+                <!-- <router-link
+                :to="{path:'search',query:{categoryName:c1.categoryName, category1Id:c1.categoryId}}"
+                >{{c1.categoryName}}</router-link>-->
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
+                    <dt>
+                      <a
+                        href="javascript:;"
+                        :data-CategoryName="c2.categoryName"
+                        :data-Category2Id="c2.categoryId"
+                      >{{c2.categoryName}}</a>
+                      <!-- <router-link
+                      :to="{path:'search',query:{categoryName:c2.categoryName, category2Id:c2.categoryId}}"
+                      >{{c2.categoryName}}</router-link>-->
+                    </dt>
+                    <dd>
+                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                        <a
+                          href="javascript:;"
+                          :data-CategoryName="c3.categoryName"
+                          :data-Category3Id="c3.categoryId"
+                        >{{c3.categoryName}}</a>
+                        <!-- <router-link
+                        :to="{path:'search',query:{categoryName:c3.categoryName, category3Id:c3.categoryId}}"
+                        >{{c3.categoryName}}</router-link>-->
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -13,44 +65,6 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort" @mouseleave="currentIndex=-2">
-        <div class="all-sort-list2">
-          <div
-            class="item bo"
-            v-for="(c1,index) in baseCategoryList"
-            :key="c1.categoryId"
-            :class="{item_on:currentIndex===index}"
-            @mouseenter="currentIndex=index"
-          >
-            <h3>
-              <!-- <a href>{{c1.categoryName}}</a> -->
-              <router-link
-                :to="{path:'search',query:{categoryName:c1.categoryName, category1Id:c1.categoryId}}"
-              >{{c1.categoryName}}</router-link>
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl class="fore" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
-                  <dt>
-                    <!-- <a href>{{c2.categoryName}}</a> -->
-                    <router-link
-                      :to="{path:'search',query:{categoryName:c2.categoryName, category2Id:c2.categoryId}}"
-                    >{{c2.categoryName}}</router-link>
-                  </dt>
-                  <dd>
-                    <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                      <!-- <a href>{{c3.categoryName}}</a> -->
-                      <router-link
-                        :to="{path:'search',query:{categoryName:c3.categoryName, category3Id:c3.categoryId}}"
-                      >{{c3.categoryName}}</router-link>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -58,17 +72,50 @@
 <script>
 // 辅助函数
 import { mapState } from 'vuex'
+// 引入节流函数
+import throttle from 'lodash/throttle'
 export default {
   name: 'TypeNav',
   data () {
     return {
-      currentIndex: -2 // 默认存储的索引值, 用来存储鼠标进入菜单后的当前索引值
+      currentIndex: -2, // 默认存储的索引值, 用来存储鼠标进入菜单后的当前索引值
+      isShowHomeFirst: true // 默认显示一级分类列表
     }
   },
   computed: {
     ...mapState({
       baseCategoryList: state => state.home.baseCategoryList
     })
+  },
+  methods: {
+    // 所有的一级分类菜单, 鼠标进入事件的节流操作
+    showSubCategorys: throttle(function (index) {
+      this.currentIndex = index
+    }, 50),
+    // 鼠标离开分类列表, 就隐藏
+    HideList () {
+      this.currentIndex = -2
+      if (this.$route.path !== '/') this.isShowHomeFirst = false
+    },
+    // 使用事件委托的方法, 实现编程式路由跳转, 同时携带对应的参数数据
+    toSearch (e) {
+      // console.dir(e.target.tagName)
+      // 可以通过触发该事件的事件源对象的标签名
+      if (e.target.tagName === 'A') {
+        const { categoryname, category1id, category2id, category3id } = e.target.dataset
+        // 获取当前点击a标签的自定义属性中的数据值
+        const query = {
+          categoryName: categoryname
+        }
+        // 判断对应的参数中是否有数据
+        const id = category1id ? 1 : category2id ? 2 : category3id ? 3 : ''
+        query[`category${id}Id`] = category1id || category2id || category3id
+        this.$router.push({
+          path: 'search',
+          query
+        })
+      }
+    }
   },
   mounted () {
     this.$store.dispatch('getBaseCategoryList')
