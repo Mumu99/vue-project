@@ -172,6 +172,10 @@ export default {
       // 重新设置传递参数, 把query和params传递到options中
       const options = {
         ...this.options,
+        category1Id: '', // 重置
+        category2Id: '', // 重置
+        category3Id: '', // 重置
+        categoryName: '', // 重置
         ...query,
         ...params
       }

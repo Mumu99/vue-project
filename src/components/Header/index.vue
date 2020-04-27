@@ -51,11 +51,17 @@ export default {
   },
   methods: {
     toSearch () {
+      const { path, query } = this.$route
       // 搜索框是否输入了, 有参数就携带传参跳转
       if (this.keyword) {
-        this.$router.push({ name: 'search', params: { keyword: this.keyword } })
+        if (path.indexOf('/search') === 0) {
+          this.$router.push({ name: 'search', query, params: { keyword: this.keyword } })
+        } else {
+          this.$router.push({ name: 'search', params: { keyword: this.keyword } })
+        }
       } else {
-        this.$router.push({ name: 'search' })
+        path.indexOf('/search') === 0 ? this.$router.push({ name: 'search', query }) : this.$router.push({ name: 'search' })
+
       }
     }
   }
