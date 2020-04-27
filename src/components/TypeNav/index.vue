@@ -19,9 +19,6 @@
                   :data-CategoryName="c1.categoryName"
                   :data-Category1Id="c1.categoryId"
                 >{{c1.categoryName}}</a>
-                <!-- <router-link
-                :to="{path:'search',query:{categoryName:c1.categoryName, category1Id:c1.categoryId}}"
-                >{{c1.categoryName}}</router-link>-->
               </h3>
               <div class="item-list clearfix">
                 <div class="subitem">
@@ -32,9 +29,6 @@
                         :data-CategoryName="c2.categoryName"
                         :data-Category2Id="c2.categoryId"
                       >{{c2.categoryName}}</a>
-                      <!-- <router-link
-                      :to="{path:'search',query:{categoryName:c2.categoryName, category2Id:c2.categoryId}}"
-                      >{{c2.categoryName}}</router-link>-->
                     </dt>
                     <dd>
                       <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
@@ -43,9 +37,6 @@
                           :data-CategoryName="c3.categoryName"
                           :data-Category3Id="c3.categoryId"
                         >{{c3.categoryName}}</a>
-                        <!-- <router-link
-                        :to="{path:'search',query:{categoryName:c3.categoryName, category3Id:c3.categoryId}}"
-                        >{{c3.categoryName}}</router-link>-->
                       </em>
                     </dd>
                   </dl>
@@ -110,10 +101,20 @@ export default {
         // 判断对应的参数中是否有数据
         const id = category1id ? 1 : category2id ? 2 : category3id ? 3 : ''
         query[`category${id}Id`] = category1id || category2id || category3id
-        this.$router.push({
-          path: 'search',
-          query
-        })
+        const { path } = this.$route
+        if (path.indexOf('/search') !== 0) {
+          this.$router.push({
+            path: 'search',
+            query
+          })
+        } else {
+          this.$router.push({
+            path: 'search',
+            query,
+            params
+          })
+        }
+
       }
     }
   },

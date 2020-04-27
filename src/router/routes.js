@@ -29,7 +29,7 @@ export default [
   // 搜索路由组件注册
   {
     name: 'search',
-    path: '/search/:keyVal?', //?--> params可传可不传
+    path: '/search/:keyword?', //?--> params可传可不传
     component: Search
   },
   // 重定向

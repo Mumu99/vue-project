@@ -33,7 +33,7 @@
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="KeyVal" />
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="toSearch">搜索</button>
         </form>
       </div>
@@ -46,14 +46,14 @@ export default {
   name: 'Header',
   data () {
     return {
-      KeyVal: ''
+      keyword: ''
     }
   },
   methods: {
     toSearch () {
       // 搜索框是否输入了, 有参数就携带传参跳转
-      if (this.KeyVal) {
-        this.$router.push({ name: 'search', params: { keyVal: this.KeyVal } })
+      if (this.keyword) {
+        this.$router.push({ name: 'search', params: { keyword: this.keyword } })
       } else {
         this.$router.push({ name: 'search' })
       }
