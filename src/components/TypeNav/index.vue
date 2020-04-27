@@ -101,20 +101,21 @@ export default {
         // 判断对应的参数中是否有数据
         const id = category1id ? 1 : category2id ? 2 : category3id ? 3 : ''
         query[`category${id}Id`] = category1id || category2id || category3id
-        const { path } = this.$route
-        if (path.indexOf('/search') !== 0) {
-          this.$router.push({
-            path: 'search',
-            query
-          })
+        // 先获取当前的路由路径
+        const { path, params } = this.$route
+        // 地址: /search  /search/xxx
+        if (path.indexOf('/search') === 0) {
+          // 属性在search页面进行跳转
+          // 如果已经在搜索页面了, 那么就直接重新跳转, 指定path为原本路径(可能存在params参数)
+          this.$router.replace({ path, query, params })
         } else {
-          this.$router.push({
-            path: 'search',
-            query,
-            params
-          })
+          // 属于不在search页面进行跳转
+          this.$router.push({ path: '/search', query })
         }
 
+        // 重置索引
+        this.currentIndex = -2
+        this.isShowHomeFirst = false
       }
     }
   },
